@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @unique
+  username  String
+  email     String   @unique
+  createdAt DateTime @default(now())
+
+  sentMessages      Chat[] @relation("Sender")
+  receivedMessages  Chat[] @relation("Receiver")
+  chatRooms         ChatRoomUser[]
+}
+
+model Chat {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  senderId   String   @db.ObjectId
+  receiverId String   @db.ObjectId
+  message    String?
+  fileId     String?  @db.ObjectId
+  createdAt  DateTime @default(now())
+  deletedAt  DateTime?
+  isDeleted  Boolean  @default(false)
+  isRead     Boolean  @default(false)
+
+  sender   User @relation("Sender", fields: [senderId], references: [id])
+  receiver User @relation("Receiver", fields: [receiverId], references: [id])
+  file     File? @relation(fields: [fileId], references: [id])
+}
+
+model File {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  fileName        String
+  urlLocation     String
+  fileDescription String?
+  fileType        String
+  createdAt       DateTime @default(now())
+  deletedAt       DateTime?
+  isDeleted       Boolean  @default(false)
+
+  chats Chat[]
+}
+
+model ChatRoom {
+  id        String        @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt DateTime      @default(now()) @map("created_at")
+  members   ChatRoomUser[]
+}
+
+model ChatRoomUser {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String    @db.ObjectId
+  chatRoomId String   @db.ObjectId
+
+  user      User      @relation(fields: [userId], references: [id])
+  chatRoom  ChatRoom  @relation(fields: [chatRoomId], references: [id])
+}
