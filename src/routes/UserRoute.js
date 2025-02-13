@@ -1,5 +1,8 @@
 import express from "express";
-import { createUser, getAllUsers, searchUser, updateUser, deleteUser } from "../controllers/UserController.js";
+import { createUser, getAllUsers, searchUser, updateUser, deleteUser, getProfile } from "../controllers/UserController.js";
+
+// Import Authenticate middleware correctly
+import Authenticate from "../middlewares/Authentication.js";
 
 const router = express.Router();
 
@@ -17,5 +20,8 @@ router.put("/:id", updateUser);
 
 // Delete User
 router.delete("/:id", deleteUser);
+
+// Protect routes (optional example)
+router.get("/profile", Authenticate, getProfile);
 
 export default router;

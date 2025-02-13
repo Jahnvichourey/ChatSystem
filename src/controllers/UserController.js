@@ -1,7 +1,24 @@
 import { PrismaClient } from "@prisma/client";
+import pkg from '@prisma/client';
 
 const prisma = new PrismaClient();
 
+//Getting the Cretentials
+export const getProfile = async (req, res) => {
+  const { userId } = req.user;
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      select: { id: true, username: true, email: true, createdAt: true },
+    });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 // Create User
 export const createUser = async (req, res) => {
   const { userId, username, email } = req.body;

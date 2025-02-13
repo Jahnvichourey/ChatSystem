@@ -36,14 +36,10 @@ export const getChatRoomsByUserId = async (req, res) => {
       where: {
         members: { some: { userId } },
       },
-      include: {
-        members: {
-          select: {
+      include: {members: {select: {
             user: { select: { id: true, username: true } }, // Return usernames
           },
-        },
-      },
-    });
+        },},});
     res.json(chatRooms);
   } catch (error) {
     res.status(500).json({ error: error.message });

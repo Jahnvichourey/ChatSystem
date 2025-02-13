@@ -7,10 +7,16 @@ import UserRoute from "./src/routes/UserRoute.js";
 import FileRoute from "./src/routes/FileRoute.js";
 import ChatRoute from "./src/routes/ChatRoute.js";
 import ChatRoomRoute from "./src/routes/ChatRoomRoute.js";
+import {Authenticate} from "./src/routes/Authenticate.js";
+
 
 const prisma = new PrismaClient();
 const app = express();
 app.use(express.json());
+
+
+app.use("/auth", Authenticate);
+app.use("/user", UserRoute);
 
 app.use("/user", UserRoute);
 app.use("/file", FileRoute);
