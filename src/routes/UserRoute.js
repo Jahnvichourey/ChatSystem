@@ -7,19 +7,19 @@ import Authenticate from "../middlewares/Authentication.js";
 const router = express.Router();
 
 // Create User
-router.post("/", createUser);
+router.post("/", Authenticate, createUser);
 
 // Get All users
-router.get("/", getAllUsers);
+router.get("/",Authenticate, getAllUsers);
 
 // Get User by either objectId or email or by userId
-router.get("/search", searchUser);
+router.get("/search", Authenticate, searchUser);
 
 // Update User
-router.put("/:id", updateUser);
+router.put("/:id",Authenticate, updateUser);
 
 // Delete User
-router.delete("/:id", deleteUser);
+router.delete("/:id", Authenticate,deleteUser);
 
 // Protect routes (optional example)
 router.get("/profile", Authenticate, getProfile);

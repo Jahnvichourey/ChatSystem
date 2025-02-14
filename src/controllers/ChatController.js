@@ -51,6 +51,7 @@ export const getChatsByUserId = async (req, res) => {
 // Deleting Chats
 export const deleteChat = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user.userId;
   try {
     const chat = await prisma.chat.update({
       where: { id },
